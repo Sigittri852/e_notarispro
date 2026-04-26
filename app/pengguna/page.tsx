@@ -38,6 +38,16 @@ type ModalState =
   | { type: "delete"; user: SafeUser }
   | null
 
+type AddUserFormState = {
+  username: string
+  password: string
+  confirmPw: string
+  namaLengkap: string
+  jabatan: string
+  securityQuestion: string
+  securityAnswer: string
+}
+
 function Alert({ type, msg }: { type: "success" | "error"; msg: string }) {
   return (
     <div
@@ -80,10 +90,11 @@ export default function ManajemenPenggunaPage() {
   }, [reload])
 
   // ── Add User ───────────────────────────────────────────────────────────────
-  const [addForm, setAddForm] = useState({
+  const [addForm, setAddForm] = useState<AddUserFormState>({
     username: "", password: "", confirmPw: "",
     namaLengkap: "", jabatan: "Staff",
-    securityQuestion: SECURITY_QUESTIONS[0], securityAnswer: "",
+    securityQuestion: SECURITY_QUESTIONS[0],
+    securityAnswer: "",
   })
   const [addMsg, setAddMsg]   = useState<{ type: "success" | "error"; msg: string } | null>(null)
   const [savingAdd, setSavingAdd] = useState(false)
@@ -114,7 +125,15 @@ export default function ManajemenPenggunaPage() {
       }
       reload()
       setModal(null)
-      setAddForm({ username: "", password: "", confirmPw: "", namaLengkap: "", jabatan: "Staff", securityQuestion: SECURITY_QUESTIONS[0], securityAnswer: "" })
+      setAddForm({
+        username: "",
+        password: "",
+        confirmPw: "",
+        namaLengkap: "",
+        jabatan: "Staff",
+        securityQuestion: SECURITY_QUESTIONS[0],
+        securityAnswer: "",
+      })
       showToast("success", `Pengguna "${result.username}" berhasil ditambahkan.`)
     }, 350)
   }

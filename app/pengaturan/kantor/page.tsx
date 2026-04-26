@@ -9,7 +9,7 @@ import {
   FileText, Hash, Layers,
 } from "lucide-react"
 import {
-  getKantor, saveKantor, defaultKantor,
+  getKantor, saveKantor, defaultKantor, formatNamaNotarisUntukKop,
   type ProfilKantor,
 } from "@/lib/kantor"
 
@@ -258,8 +258,8 @@ export default function PengaturanKantorPage() {
                   <p style={{ fontSize: 10, fontWeight: "bold", textTransform: "uppercase", letterSpacing: 1, color: "#555" }}>
                     {form.namaKantor ? (form.namaKantor.toUpperCase().includes("PPAT") ? "KANTOR NOTARIS & PPAT" : "KANTOR NOTARIS") : "KANTOR NOTARIS & PPAT"}
                   </p>
-                  <p style={{ fontSize: 16, fontWeight: "bold", textTransform: "uppercase", letterSpacing: 2, margin: "3px 0" }}>
-                    {form.namaNotaris || "NAMA NOTARIS"}
+                  <p style={{ fontSize: 16, fontWeight: "bold", letterSpacing: 1, margin: "3px 0" }}>
+                    {form.namaNotaris ? formatNamaNotarisUntukKop(form.namaNotaris) : "NAMA NOTARIS"}
                   </p>
                   {form.nomorSK && (
                     <p style={{ fontSize: 9, color: "#555" }}>SK No. {form.nomorSK}</p>

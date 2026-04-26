@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState } from "react"
 import { Printer, X, Download } from "lucide-react"
 import type { Akta } from "@/lib/types"
-import { getKantor, getAlamatLengkap, getKontakLine, type ProfilKantor } from "@/lib/kantor"
+import { getKantor, getAlamatLengkap, getKontakLine, formatNamaNotarisUntukKop, type ProfilKantor } from "@/lib/kantor"
 import { isoToTanggalPanjang, formatLengkap } from "@/lib/dateUtils"
 
 interface Props {
@@ -33,6 +33,8 @@ function buildPrintHtml(akta: Akta, kantor: ProfilKantor): string {
   const alamat = getAlamatLengkap(kantor)
   const kontak = getKontakLine(kantor)
   const kopTitle = isPPAT ? "KANTOR NOTARIS & PPAT" : "KANTOR NOTARIS"
+  const namaKop = formatNamaNotarisUntukKop(kantor.namaNotaris || kantor.namaKantor || "e-NotarisKu Pro")
+  const namaTtd = kantor.namaNotaris ? formatNamaNotarisUntukKop(kantor.namaNotaris) : ""
 
   // kop logo (base64 embedded)
   const logoTag = kantor.logoUrl
@@ -135,7 +137,7 @@ function buildPrintHtml(akta: Akta, kantor: ProfilKantor): string {
     <div style="text-align:center;">
       <p style="font-size:10pt;font-weight:bold;margin-bottom:60pt;">${isPPAT?"PPAT":"Notaris"}</p>
       <div style="border-top:1px solid #000;padding-top:4pt;">
-        <p style="font-weight:bold;font-size:11pt;">${kantor.namaNotaris||"_________________________"}</p>
+        <p style="font-weight:bold;font-size:11pt;">${namaTtd || "_________________________"}</p>
         ${kantor.nomorSK ? `<p style="font-size:9pt;color:#555;">SK No. ${kantor.nomorSK}</p>` : ""}
       </div>
     </div>`
@@ -162,8 +164,8 @@ function buildPrintHtml(akta: Akta, kantor: ProfilKantor): string {
     <div style="text-align:center;border-bottom:3px double #000;padding-bottom:12pt;margin-bottom:18pt;">
       ${logoTag}
       <p style="font-size:9pt;font-weight:bold;text-transform:uppercase;letter-spacing:1px;color:#444;">${kopTitle}</p>
-      <h1 style="font-size:18pt;font-weight:bold;text-transform:uppercase;letter-spacing:2px;margin:4px 0;">
-        ${kantor.namaNotaris || kantor.namaKantor || "e-NotarisKu Pro"}
+      <h1 style="font-size:18pt;font-weight:bold;letter-spacing:1px;margin:4px 0;">
+        ${namaKop}
       </h1>
       ${kantor.nomorSK ? `<p style="font-size:9pt;color:#555;">SK No. ${kantor.nomorSK}</p>` : ""}
       ${alamat ? `<p style="font-size:9.5pt;color:#333;margin-top:3px;">${alamat}</p>` : ""}
@@ -349,6 +351,8 @@ export default function PrintAkta({ akta, onClose }: Props) {
   const isPPAT = akta.tipeAkta === "PPAT"
   const alamat = getAlamatLengkap(kantor)
   const kontak = getKontakLine(kantor)
+  const namaKopPreview = formatNamaNotarisUntukKop(kantor.namaNotaris || kantor.namaKantor || "NAMA NOTARIS")
+  const namaTtdPreview = kantor.namaNotaris ? formatNamaNotarisUntukKop(kantor.namaNotaris) : ""
 
   return (
     <div style={{
@@ -407,8 +411,8 @@ export default function PrintAkta({ akta, onClose }: Props) {
           <p style={{ fontSize:"9pt", fontWeight:"bold", textTransform:"uppercase", letterSpacing:1, color:"#444" }}>
             {isPPAT ? "KANTOR NOTARIS & PPAT" : "KANTOR NOTARIS"}
           </p>
-          <h1 style={{ fontSize:"18pt", fontWeight:"bold", textTransform:"uppercase", letterSpacing:2, margin:"4px 0" }}>
-            {kantor.namaNotaris || kantor.namaKantor || "NAMA NOTARIS"}
+          <h1 style={{ fontSize:"18pt", fontWeight:"bold", letterSpacing:1, margin:"4px 0" }}>
+            {namaKopPreview}
           </h1>
           {kantor.nomorSK && (
             <p style={{ fontSize:"9pt", color:"#555" }}>SK No. {kantor.nomorSK}</p>
@@ -596,7 +600,7 @@ export default function PrintAkta({ akta, onClose }: Props) {
           <div style={{ textAlign:"center" }}>
             <p style={{ fontSize:"10pt", fontWeight:"bold", marginBottom:60 }}>{isPPAT?"PPAT":"Notaris"}</p>
             <div style={{ borderTop:"1px solid #000", paddingTop:4 }}>
-              <p style={{ fontWeight:"bold", fontSize:"11pt" }}>{kantor.namaNotaris || "________________________"}</p>
+              <p style={{ fontWeight:"bold", fontSize:"11pt" }}>{namaTtdPreview || "________________________"}</p>
               {kantor.nomorSK && <p style={{ fontSize:"9pt", color:"#555" }}>SK No. {kantor.nomorSK}</p>}
             </div>
           </div>

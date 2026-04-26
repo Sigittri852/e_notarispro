@@ -77,3 +77,12 @@ export function getKontakLine(k: ProfilKantor): string {
   if (k.website) parts.push(k.website)
   return parts.join(" \u2022 ")
 }
+
+/** Gelar Magister Kenotariatan ditulis M.Kn. (n kecil). Menyesuaikan variasi input & menghindari M.KN dari CSS uppercase. */
+export function formatNamaNotarisUntukKop(nama: string): string {
+  if (!nama) return nama
+  return nama
+    .replace(/\bM\.K\.N\./gi, "M.Kn.")
+    .replace(/\bM\.K\.N\b/gi, "M.Kn")
+    .replace(/\bM\.KN\b/gi, "M.Kn")
+}
